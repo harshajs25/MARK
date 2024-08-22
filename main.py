@@ -2,6 +2,8 @@ import pyttsx3
 import datetime
 import time
 import speech_recognition as sr
+import google.generativeai as genai
+import os
 
 
 engine = pyttsx3.init('sapi5')
@@ -42,13 +44,19 @@ def wish():
         speak("good afternoon")
     else:
         speak("good evening")
-    speak("I am MARK , please tell me how may i help you")
+    speak("I am MARK, how may i help you")
 
 if __name__ == "__main__":
     wish()
 
 while True:
     command = takecommand().lower()
+
+    genai.configure(api_key=os.environ["GEMINIAPI_KEY"])
+    model = genai.GenerativeModel('gemini-1.5-flash')
+    response = model.generate_content(command)
+    print(response.text)
+    speak(response.text)
 
     if "mark" in command:
         print(command)
