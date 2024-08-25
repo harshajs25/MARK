@@ -51,12 +51,14 @@ def wish():
 def geminiapi(command):
     if command == "none":
         return
+    geminicommand = command.replace("google","")
     genai.configure(api_key=os.environ["GEMINIAPI_KEY"])
     model = genai.GenerativeModel('gemini-1.5-flash')
-    response = model.generate_content(command)
+    response = model.generate_content(geminicommand)
     result = response.text.strip()
+    final_result = result.replace("*", "").replace("#","")
     print(result)
-    speak(result)
+    speak(final_result)
 
 
 def openaiapi(command):
@@ -81,7 +83,6 @@ def openaiapi(command):
 
 if __name__ == "__main__":
     wish()
-    openaiapi(command="what is ai")
 
     while True:
         command = take_command()
@@ -90,8 +91,8 @@ if __name__ == "__main__":
             print(command)
             wish()
 
-        if "google" in command:
+        elif "google" in command:
             geminiapi(command)
 
-        if "openai" in command or "open AI"in command:
+        elif "openai" in command or "open AI"in command:
             openaiapi(command)
